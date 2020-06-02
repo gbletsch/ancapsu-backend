@@ -26,7 +26,7 @@ func main() {
 		// port = ":8080"
 	}
 
-	http.ListenAndServe(port, r)
+	http.ListenAndServe(":" + port, r)
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
