@@ -19,7 +19,13 @@ func main() {
 	r.HandleFunc("/article/bycategory/{cat}", handleNewsCategory)
 	r.HandleFunc("/news/homepage", handleNewsHomepage)
 
-	http.ListenAndServe(":8080", r)
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Println("$PORT must be set")
+		port = ":8080"
+	}
+
+	http.ListenAndServe(port, r)
 }
 
 func getData(url string) (responseData []byte) {
@@ -45,14 +51,6 @@ func handleNewsCategory(w http.ResponseWriter, r *http.Request) {
 	cat := vars["cat"]
 	url += cat
 
-	// ini := r.FormValue("ini")
-	// url +=  "&ini="
-	// url += ini
-
-	// max := r.FormValue("max")
-	// url += "&max="
-	// url += max
-
 	responseData := getData(url)
 	respond(w, responseData)
 }
@@ -64,19 +62,11 @@ func handleCategory(w http.ResponseWriter, r *http.Request) {
 	cat := vars["cat"]
 	url += cat
 
-	// ini := r.FormValue("ini")
-	// url +=  "&ini="
-	// url += ini
-
-	// max := r.FormValue("max")
-	// url += "&max="
-	// url += max
-
 	responseData := getData(url)
 	respond(w, responseData)
 }
 
-func handleArticle (w http.ResponseWriter, r *http.Request) {
+func handleArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	responseData := getData("https://ancap.su/api/Article/Get?token=&id=" + id)
