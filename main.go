@@ -13,6 +13,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 
+	r.HandleFunc("/", handleIndex)
 	r.HandleFunc("/video/get/{id}", handleVideo)
 	r.HandleFunc("/article/get/{id}", handleArticle)
 	r.HandleFunc("/video/bycategory/{cat}", handleCategory)
@@ -26,6 +27,10 @@ func main() {
 	}
 
 	http.ListenAndServe(port, r)
+}
+
+func handleIndex(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello, world!!!"))
 }
 
 func getData(url string) (responseData []byte) {
