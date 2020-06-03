@@ -22,11 +22,11 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("$PORT must be set")
-		// port = ":8080"
+		log.Println("$PORT must be set")
+		port = "8080"
 	}
 
-	http.ListenAndServe(":" + port, r)
+	http.ListenAndServe(":"+port, r)
 }
 
 func handleIndex(w http.ResponseWriter, r *http.Request) {
