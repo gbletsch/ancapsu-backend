@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,6 +15,7 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handleIndex)
+	r.HandleFunc("/target-list", handleTarget)
 	r.HandleFunc("/video/get/{id}", handleVideo)
 	r.HandleFunc("/article/get/{id}", handleArticle)
 	r.HandleFunc("/video/bycategory/{cat}", handleCategory)
@@ -35,7 +37,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 func getData(url string) (responseData []byte) {
 	response, err := http.Get(url)
-	log.Println(url)
+	// log.Println(url)
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -49,9 +51,31 @@ func getData(url string) (responseData []byte) {
 	return responseData
 }
 
+func unmarshalTarget(b []byte) {
+	var data interface{}
+	json.Unmarshal(b, &data)
+	mapData := data.(map[string]interface{})
+	target := mapData["Targets"]
+	log.Println(target)
+}
+
+func handleTarget(w http.ResponseWriter, r *http.Request) {
+	vars := r.URL.Query()
+	ini := vars["ini"][0]
+	max := vars["max"][0]
+
+	url := "https://ancap.su/api/Target/ListAll?token=&ini=" + ini + "&max=" + max
+
+	responseData := getData(url)
+	// unmarshalTarget(responseData)
+
+	respond(w, responseData)
+}
+
 func handleNewsCategory(w http.ResponseWriter, r *http.Request) {
 	url := "https://ancap.su/api/Article/ByCategory?token=&categ="
 
+	log.Println("url", r.URL)
 	vars := mux.Vars(r)
 	cat := vars["cat"]
 	url += cat
