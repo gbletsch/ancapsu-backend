@@ -68,7 +68,7 @@ func handleTarget(w http.ResponseWriter, r *http.Request) {
 	ini := vars["ini"][0]
 	max := vars["max"][0]
 
-	url := "https://ancap.su/api/Target/ListAll?token=&ini=" + ini + "&max=" + max
+	url := "https://ancap.su/api/Target/List?token=&ini=" + ini + "&max=" + max
 
 	responseData := getData(url)
 	// unmarshalTarget(responseData)
