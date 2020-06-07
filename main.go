@@ -15,7 +15,8 @@ func main() {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", handleIndex)
-	r.HandleFunc("/target-list", handleTarget)
+	r.HandleFunc("/target-list", handleAllTarget)
+	r.HandleFunc("/target-list/{id}", handleTarget)
 	r.HandleFunc("/video/get/{id}", handleVideo)
 	r.HandleFunc("/article/get/{id}", handleArticle)
 	r.HandleFunc("/video/bycategory/{cat}", handleCategory)
@@ -51,7 +52,6 @@ func getData(url string) (responseData []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// log.Println(string(responseData))
 	return responseData
 }
 
@@ -63,13 +63,12 @@ func unmarshalTarget(b []byte) {
 	log.Println(target)
 }
 
-func handleTarget(w http.ResponseWriter, r *http.Request) {
+func handleAllTarget(w http.ResponseWriter, r *http.Request) {
 	vars := r.URL.Query()
 	ini := vars["ini"][0]
 	max := vars["max"][0]
 
 	url := "https://ancap.su/api/Target/List?token=&ini=" + ini + "&max=" + max
-	// url := "https://ancap.su/api/Target/List?token=&ini=0&max=10"
 
 	responseData := getData(url)
 	// unmarshalTarget(responseData)
@@ -96,6 +95,13 @@ func handleCategory(w http.ResponseWriter, r *http.Request) {
 	url += cat
 
 	responseData := getData(url)
+	respond(w, r, responseData)
+}
+
+func handleTarget(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	responseData := getData("https://ancap.su/api/Target/Get?token=&id=" + id)
 	respond(w, r, responseData)
 }
 
