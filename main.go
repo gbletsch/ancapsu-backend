@@ -26,7 +26,7 @@ func main() {
 	if port == "" {
 		fmt.Println("* env variable PORT does not exist, using 8080")
 		fmt.Println("* using 8080")
-		fmt.Println("* try: 192.168.0.7:8080")
+		fmt.Println("* try: http://192.168.0.7:8080")
 		fmt.Println("* or use 'ip iddr show' on shell")
 		port = "8080"
 	}
@@ -40,7 +40,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 func getData(url string) (responseData []byte) {
 	response, err := http.Get(url)
-	// log.Println(url)
+	log.Println(url)
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -51,6 +51,7 @@ func getData(url string) (responseData []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// log.Println(string(responseData))
 	return responseData
 }
 
@@ -120,6 +121,7 @@ func handleNewsHomepage(w http.ResponseWriter, r *http.Request) {
 func respond(w http.ResponseWriter, responseData []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Origin", "https://ancapsu-frontend.netlify.app")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(responseData))
 }
