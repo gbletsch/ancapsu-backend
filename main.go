@@ -24,7 +24,10 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Println("$PORT must be set")
+		fmt.Println("* env variable PORT does not exist, using 8080")
+		fmt.Println("* using 8080")
+		fmt.Println("* try: 192.168.0.7:8080")
+		fmt.Println("* or use 'ip iddr show' on shell")
 		port = "8080"
 	}
 
