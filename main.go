@@ -40,7 +40,7 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 
 func getData(url string) (responseData []byte) {
 	response, err := http.Get(url)
-	log.Println(url)
+	// log.Println(url)
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -73,19 +73,18 @@ func handleTarget(w http.ResponseWriter, r *http.Request) {
 	responseData := getData(url)
 	// unmarshalTarget(responseData)
 
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
 func handleNewsCategory(w http.ResponseWriter, r *http.Request) {
 	url := "https://ancap.su/api/Article/ByCategory?token=&categ="
 
-	log.Println("url", r.URL)
 	vars := mux.Vars(r)
 	cat := vars["cat"]
 	url += cat
 
 	responseData := getData(url)
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
 func handleCategory(w http.ResponseWriter, r *http.Request) {
@@ -96,32 +95,31 @@ func handleCategory(w http.ResponseWriter, r *http.Request) {
 	url += cat
 
 	responseData := getData(url)
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
 func handleArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	responseData := getData("https://ancap.su/api/Article/Get?token=&id=" + id)
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
 func handleVideo(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	responseData := getData("https://ancap.su/api/Video/Get?token=&id=" + id)
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
 func handleNewsHomepage(w http.ResponseWriter, r *http.Request) {
 	responseData := getData("https://ancap.su/api/News/HomePage")
-	respond(w, responseData)
+	respond(w, r, responseData)
 }
 
-func respond(w http.ResponseWriter, responseData []byte) {
+func respond(w http.ResponseWriter, r *http.Request, responseData []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Origin", "https://ancapsu-frontend.netlify.app")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(responseData))
 }
